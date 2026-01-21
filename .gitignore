@@ -7,6 +7,9 @@
 .vscode/
 .idea/
 
+# Copilot logs
+.github/logs
+
 # Misc
 .DS_Store
 npm-debug.log*
