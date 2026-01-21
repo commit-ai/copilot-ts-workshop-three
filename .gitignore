@@ -8,7 +8,7 @@
 .idea/
 
 # Copilot logs
-.github/logs
+.github/logs/
 
 # Misc
 .DS_Store
