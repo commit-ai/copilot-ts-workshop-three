@@ -18,6 +18,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.TEST_PORT || process.env.PORT || 3000;
 
+// Serve static files (images and other assets)
+app.use(express.static(path.join(__dirname, '../public')));
+
 // Root route
 /**
  * GET /
