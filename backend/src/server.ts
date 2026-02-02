@@ -16,6 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.use(express.json());
 const PORT = process.env.TEST_PORT || process.env.PORT || 3000;
 
 // Root route
@@ -117,6 +118,100 @@ app.get('/api/superheroes/:id/powerstats', async (req, res) => {
     }
   } catch (err) {
     console.error('Error loading superheroes data:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/**
+ * Interface for superhero powerstats
+ */
+interface Powerstats {
+  intelligence: number;
+  strength: number;
+  speed: number;
+  durability: number;
+  power: number;
+  combat: number;
+}
+
+/**
+ * Interface for superhero data in compare request
+ */
+interface SuperheroCompareData {
+  name: string;
+  powerstats: Powerstats;
+}
+
+/**
+ * POST /api/superheroes/compare
+ * Compares two superheroes and generates a battle story.
+ *
+ * Body: {
+ *   hero1: { name: string, powerstats: Powerstats },
+ *   hero2: { name: string, powerstats: Powerstats }
+ * }
+ * Response: 200 OK - { story: string } - A battle story up to 800 characters
+ *           400 Bad Request - If request body is invalid
+ *           500 Internal Server Error - If story generation fails
+ */
+app.post('/api/superheroes/compare', (req, res) => {
+  try {
+    const { hero1, hero2 } = req.body;
+
+    // Validate input
+    if (!hero1 || !hero2 || !hero1.name || !hero2.name || !hero1.powerstats || !hero2.powerstats) {
+      res.status(400).send('Invalid request: both hero1 and hero2 with name and powerstats are required');
+      return;
+    }
+
+    // Calculate total power for each hero
+    const calculateTotalPower = (stats: Powerstats): number => {
+      return stats.intelligence + stats.strength + stats.speed + 
+             stats.durability + stats.power + stats.combat;
+    };
+
+    const hero1Power = calculateTotalPower(hero1.powerstats);
+    const hero2Power = calculateTotalPower(hero2.powerstats);
+
+    // Determine winner and create battle story
+    const powerDiff = Math.abs(hero1Power - hero2Power);
+    const winner = hero1Power > hero2Power ? hero1 : hero2;
+    const loser = hero1Power > hero2Power ? hero2 : hero1;
+
+    // Create a narrative based on the stats comparison
+    let story = `In an epic battle between ${hero1.name} and ${hero2.name}, `;
+
+    if (powerDiff < 20) {
+      story += `the two heroes were nearly evenly matched! Both fighters displayed incredible prowess. `;
+      story += `${hero1.name} (power: ${hero1Power}) traded fierce blows with ${hero2.name} (power: ${hero2Power}). `;
+      story += `After an intense struggle, ${winner.name} emerged victorious by the narrowest of margins, `;
+      story += `earning the respect of their worthy opponent.`;
+    } else if (powerDiff < 50) {
+      story += `${winner.name} held a clear advantage with superior abilities. `;
+      story += `Despite ${loser.name}'s valiant effort, ${winner.name}'s combination of `;
+      const topStat = Object.entries(winner.powerstats).reduce((a, b) => a[1] > b[1] ? a : b);
+      story += `${topStat[0]} (${topStat[1]}) and overall power (${hero1Power > hero2Power ? hero1Power : hero2Power}) `;
+      story += `proved decisive. ${loser.name} fought bravely but was ultimately overwhelmed.`;
+    } else {
+      story += `${winner.name} completely dominated the fight! `;
+      story += `With overwhelming power (${hero1Power > hero2Power ? hero1Power : hero2Power} vs ${hero1Power > hero2Power ? hero2Power : hero1Power}), `;
+      story += `${winner.name} showcased superior `;
+      const stats = [];
+      if (winner.powerstats.strength > loser.powerstats.strength + 20) stats.push('strength');
+      if (winner.powerstats.speed > loser.powerstats.speed + 20) stats.push('speed');
+      if (winner.powerstats.combat > loser.powerstats.combat + 20) stats.push('combat');
+      story += stats.length > 0 ? stats.join(', ') + '. ' : 'abilities across the board. ';
+      story += `${loser.name} never stood a chance against such overwhelming might.`;
+    }
+
+    // Ensure story is under 800 characters
+    if (story.length > 800) {
+      story = story.substring(0, 797) + '...';
+    }
+
+    res.json({ story });
+  } catch (err) {
+    console.error('Error generating battle story:', err);
     res.status(500).send('Internal Server Error');
   }
 });

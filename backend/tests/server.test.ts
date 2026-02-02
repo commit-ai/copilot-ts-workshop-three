@@ -75,3 +75,118 @@ describe('GET /api/superheroes/:id/powerstats', () => {
   });
 });
 
+describe('POST /api/superheroes/compare', () => {
+  it('should return a battle story when comparing two superheroes', async () => {
+    const hero1 = {
+      name: 'A-Bomb',
+      powerstats: {
+        intelligence: 38,
+        strength: 100,
+        speed: 17,
+        durability: 80,
+        power: 24,
+        combat: 64
+      }
+    };
+    const hero2 = {
+      name: 'Ant-Man',
+      powerstats: {
+        intelligence: 100,
+        strength: 18,
+        speed: 23,
+        durability: 28,
+        power: 32,
+        combat: 32
+      }
+    };
+
+    const response = await request(app)
+      .post('/api/superheroes/compare')
+      .send({ hero1, hero2 });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('story');
+    expect(typeof response.body.story).toBe('string');
+    expect(response.body.story.length).toBeLessThanOrEqual(800);
+    expect(response.body.story).toContain('A-Bomb');
+    expect(response.body.story).toContain('Ant-Man');
+  });
+
+  it('should return 400 if hero1 is missing', async () => {
+    const hero2 = {
+      name: 'Ant-Man',
+      powerstats: {
+        intelligence: 100,
+        strength: 18,
+        speed: 23,
+        durability: 28,
+        power: 32,
+        combat: 32
+      }
+    };
+
+    const response = await request(app)
+      .post('/api/superheroes/compare')
+      .send({ hero2 });
+
+    expect(response.status).toBe(400);
+    expect(response.text).toContain('Invalid request');
+  });
+
+  it('should return 400 if hero2 is missing powerstats', async () => {
+    const hero1 = {
+      name: 'A-Bomb',
+      powerstats: {
+        intelligence: 38,
+        strength: 100,
+        speed: 17,
+        durability: 80,
+        power: 24,
+        combat: 64
+      }
+    };
+    const hero2 = {
+      name: 'Ant-Man'
+    };
+
+    const response = await request(app)
+      .post('/api/superheroes/compare')
+      .send({ hero1, hero2 });
+
+    expect(response.status).toBe(400);
+    expect(response.text).toContain('Invalid request');
+  });
+
+  it('should handle evenly matched heroes', async () => {
+    const hero1 = {
+      name: 'Hero A',
+      powerstats: {
+        intelligence: 50,
+        strength: 50,
+        speed: 50,
+        durability: 50,
+        power: 50,
+        combat: 50
+      }
+    };
+    const hero2 = {
+      name: 'Hero B',
+      powerstats: {
+        intelligence: 55,
+        strength: 45,
+        speed: 50,
+        durability: 50,
+        power: 50,
+        combat: 50
+      }
+    };
+
+    const response = await request(app)
+      .post('/api/superheroes/compare')
+      .send({ hero1, hero2 });
+
+    expect(response.status).toBe(200);
+    expect(response.body.story).toContain('evenly matched');
+  });
+});
+
