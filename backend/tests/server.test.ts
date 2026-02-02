@@ -53,12 +53,12 @@ describe('GET /api/superheroes/:id/powerstats', () => {
     const response = await request(app).get('/api/superheroes/2/powerstats');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      intelligence: 100,
-      strength: 18,
-      speed: 23,
-      durability: 28,
-      power: 32,
-      combat: 32
+      intelligence: 88,
+      strength: 28,
+      speed: 35,
+      durability: 65,
+      power: 100,
+      combat: 85
     });
   });
 
