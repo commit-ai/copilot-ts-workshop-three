@@ -1,41 +1,223 @@
 [
-    {
-      "id": 1,
-      "name": "A-Bomb",
-      "image": "https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/1-a-bomb.jpg",
-      "powerstats": {
-        "intelligence": 38,
-        "strength": 100,
-        "speed": 17,
-        "durability": 80,
-        "power": 24,
-        "combat": 64
-      }
-    },
-    {
-      "id": 2,
-      "name": "Ant-Man",
-      "image": "https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/30-ant-man.jpg",
-      "powerstats": {
-        "intelligence": 100,
-        "strength": 18,
-        "speed": 23,
-        "durability": 28,
-        "power": 32,
-        "combat": 32
-      }
-    },
-    {
-      "id": 3,
-      "name": "Bane",
-      "image": "https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/60-bane.jpg",
-      "powerstats": {
-        "intelligence": 88,
-        "strength": 38,
-        "speed": 23,
-        "durability": 56,
-        "power": 51,
-        "combat": 95
-      }
+  {
+    "id": 1,
+    "name": "A-Bomb",
+    "image": "/images/1-a-bomb.jpg",
+    "powerstats": {
+      "intelligence": 38,
+      "strength": 100,
+      "speed": 17,
+      "durability": 80,
+      "power": 24,
+      "combat": 64
     }
+  },
+  {
+    "id": 2,
+    "name": "Abe Sapien",
+    "image": "/images/2-abe-sapien.jpg",
+    "powerstats": {
+      "intelligence": 88,
+      "strength": 28,
+      "speed": 35,
+      "durability": 65,
+      "power": 100,
+      "combat": 85
+    }
+  },
+  {
+    "id": 3,
+    "name": "Abin Sur",
+    "image": "/images/3-abin-sur.jpg",
+    "powerstats": {
+      "intelligence": 50,
+      "strength": 90,
+      "speed": 53,
+      "durability": 64,
+      "power": 99,
+      "combat": 65
+    }
+  },
+  {
+    "id": 4,
+    "name": "Abomination",
+    "image": "/images/4-abomination.jpg",
+    "powerstats": {
+      "intelligence": 63,
+      "strength": 80,
+      "speed": 53,
+      "durability": 90,
+      "power": 62,
+      "combat": 95
+    }
+  },
+  {
+    "id": 5,
+    "name": "Abraxas",
+    "image": "/images/5-abraxas.jpg",
+    "powerstats": {
+      "intelligence": 88,
+      "strength": 63,
+      "speed": 83,
+      "durability": 100,
+      "power": 100,
+      "combat": 55
+    }
+  },
+  {
+    "id": 6,
+    "name": "Absorbing Man",
+    "image": "/images/6-absorbing-man.jpg",
+    "powerstats": {
+      "intelligence": 38,
+      "strength": 80,
+      "speed": 25,
+      "durability": 100,
+      "power": 98,
+      "combat": 64
+    }
+  },
+  {
+    "id": 7,
+    "name": "Adam Monroe",
+    "image": "/images/7-adam-monroe.jpg",
+    "powerstats": {
+      "intelligence": 63,
+      "strength": 10,
+      "speed": 12,
+      "durability": 100,
+      "power": 100,
+      "combat": 64
+    }
+  },
+  {
+    "id": 8,
+    "name": "Adam Strange",
+    "image": "/images/8-adam-strange.jpg",
+    "powerstats": {
+      "intelligence": 69,
+      "strength": 10,
+      "speed": 33,
+      "durability": 40,
+      "power": 37,
+      "combat": 50
+    }
+  },
+  {
+    "id": 10,
+    "name": "Agent Bob",
+    "image": "/images/10-agent-bob.jpg",
+    "powerstats": {
+      "intelligence": 10,
+      "strength": 8,
+      "speed": 13,
+      "durability": 5,
+      "power": 5,
+      "combat": 20
+    }
+  },
+  {
+    "id": 11,
+    "name": "Agent Zero",
+    "image": "/images/11-agent-zero.jpg",
+    "powerstats": {
+      "intelligence": 75,
+      "strength": 28,
+      "speed": 38,
+      "durability": 80,
+      "power": 72,
+      "combat": 95
+    }
+  },
+  {
+    "id": 12,
+    "name": "Air-Walker",
+    "image": "/images/12-air-walker.jpg",
+    "powerstats": {
+      "intelligence": 50,
+      "strength": 85,
+      "speed": 100,
+      "durability": 85,
+      "power": 100,
+      "combat": 40
+    }
+  },
+  {
+    "id": 13,
+    "name": "Ajax",
+    "image": "/images/13-ajax.jpg",
+    "powerstats": {
+      "intelligence": 56,
+      "strength": 48,
+      "speed": 35,
+      "durability": 80,
+      "power": 34,
+      "combat": 55
+    }
+  },
+  {
+    "id": 14,
+    "name": "Alan Scott",
+    "image": "/images/14-alan-scott.jpg",
+    "powerstats": {
+      "intelligence": 63,
+      "strength": 80,
+      "speed": 23,
+      "durability": 90,
+      "power": 100,
+      "combat": 32
+    }
+  },
+  {
+    "id": 15,
+    "name": "Alex Mercer",
+    "image": "/images/15-alex-mercer.jpg",
+    "powerstats": {
+      "intelligence": 50,
+      "strength": 80,
+      "speed": 42,
+      "durability": 90,
+      "power": 100,
+      "combat": 50
+    }
+  },
+  {
+    "id": 17,
+    "name": "Alfred Pennyworth",
+    "image": "/images/17-alfred-pennyworth.jpg",
+    "powerstats": {
+      "intelligence": 63,
+      "strength": 10,
+      "speed": 17,
+      "durability": 10,
+      "power": 7,
+      "combat": 55
+    }
+  },
+  {
+    "id": 18,
+    "name": "Alien",
+    "image": "/images/18-alien.jpg",
+    "powerstats": {
+      "intelligence": 50,
+      "strength": 28,
+      "speed": 42,
+      "durability": 90,
+      "power": 57,
+      "combat": 60
+    }
+  },
+  {
+    "id": 20,
+    "name": "Amazo",
+    "image": "/images/20-amazo.jpg",
+    "powerstats": {
+      "intelligence": 63,
+      "strength": 100,
+      "speed": 83,
+      "durability": 100,
+      "power": 100,
+      "combat": 100
+    }
+  }
 ]
