@@ -48,8 +48,8 @@ function generateBattleStory(hero1, hero2) {
     const hero2Power = calculateTotalPower(hero2.powerstats);
     // Determine winner and create battle story
     const powerDiff = Math.abs(hero1Power - hero2Power);
-    const winner = hero1Power > hero2Power ? hero1 : hero2;
-    const loser = hero1Power > hero2Power ? hero2 : hero1;
+    const winner = hero1Power >= hero2Power ? hero1 : hero2;
+    const loser = hero1Power >= hero2Power ? hero2 : hero1;
     // Create a narrative based on the stats comparison
     let story = `In an epic battle between ${hero1.name} and ${hero2.name}, `;
     if (powerDiff < 20) {
@@ -62,12 +62,12 @@ function generateBattleStory(hero1, hero2) {
         story += `${winner.name} held a clear advantage with superior abilities. `;
         story += `Despite ${loser.name}'s valiant effort, ${winner.name}'s combination of `;
         const topStat = Object.entries(winner.powerstats).reduce((a, b) => a[1] > b[1] ? a : b);
-        story += `${topStat[0]} (${topStat[1]}) and overall power (${hero1Power > hero2Power ? hero1Power : hero2Power}) `;
+        story += `${topStat[0]} (${topStat[1]}) and overall power (${hero1Power >= hero2Power ? hero1Power : hero2Power}) `;
         story += `proved decisive. ${loser.name} fought bravely but was ultimately overwhelmed.`;
     }
     else {
         story += `${winner.name} completely dominated the fight! `;
-        story += `With overwhelming power (${hero1Power > hero2Power ? hero1Power : hero2Power} vs ${hero1Power > hero2Power ? hero2Power : hero1Power}), `;
+        story += `With overwhelming power (${hero1Power >= hero2Power ? hero1Power : hero2Power} vs ${hero1Power >= hero2Power ? hero2Power : hero1Power}), `;
         story += `${winner.name} showcased superior `;
         const stats = [];
         if (winner.powerstats.strength > loser.powerstats.strength + 20)

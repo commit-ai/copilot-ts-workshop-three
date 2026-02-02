@@ -31,8 +31,8 @@ function generateBattleStory(hero1, hero2) {
 
   // Determine winner and create battle story
   const powerDiff = Math.abs(hero1Power - hero2Power);
-  const winner = hero1Power > hero2Power ? hero1 : hero2;
-  const loser = hero1Power > hero2Power ? hero2 : hero1;
+  const winner = hero1Power >= hero2Power ? hero1 : hero2;
+  const loser = hero1Power >= hero2Power ? hero2 : hero1;
 
   // Create a narrative based on the stats comparison
   let story = `In an epic battle between ${hero1.name} and ${hero2.name}, `;
