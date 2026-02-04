@@ -41,12 +41,12 @@ async function testMCP() {
     console.log(`✅ Successfully loaded ${superheroes.length} superheroes`);
     
     // Test finding by name (case insensitive)
-    const antman = superheroes.find(h => h.name?.toLowerCase() === "ant-man");
-    if (antman) {
-      console.log("✅ Found Ant-Man by name");
-      console.log(formatSuperheroMarkdown(antman));
+    const abomination = superheroes.find(h => h.name?.toLowerCase() === "abomination");
+    if (abomination) {
+      console.log("✅ Found Abomination by name");
+      console.log(formatSuperheroMarkdown(abomination));
     } else {
-      console.log("❌ Could not find Ant-Man");
+      console.log("❌ Could not find Abomination");
     }
     
     // Test finding by ID
