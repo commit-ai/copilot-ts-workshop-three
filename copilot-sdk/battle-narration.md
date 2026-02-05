@@ -5,7 +5,7 @@ Use this file as a single prompt to automatically implement the “battle narrat
 You are a coding agent. Make the changes directly in the repository. Do not add new features beyond what’s described here.
 
 ## Goal
-Enable a Copilot SDK-powered battle narration that generates a vivid 80–120 word paragraph describing a fight between two selected superheroes using their names, images, and powerstats.
+Enable a Copilot SDK-powered battle narration that generates a vivid 80 to 120 word paragraph describing a fight between two selected superheroes using their names, images, and powerstats.
 
 ## Scope
 Edit only these files:
@@ -19,7 +19,7 @@ Do not create new files.
 - Feature shows only when `ENABLE_BATTLE_NARRATION` is `true` and exactly 2 heroes are selected.
 - Frontend calls `POST /api/battle-narration` with `{ hero1, hero2 }` and displays `{ narration }`.
 - Backend validates both heroes exist and have `id`, `name`, `image`, and `powerstats` with numeric fields.
-- Copilot SDK integration reads credentials from environment variables.
+- Copilot SDK integration uses the logged-in Copilot CLI user by default (no custom token helper).
 - Narration is 80–120 words, includes both hero names, and declares a winner or a stalemate.
 - Cleanly destroys the session and stops the client.
 
@@ -36,18 +36,19 @@ File: `backend/src/utils/battleNarration.ts`
 
 Replace ALL `BATTLE_PLACEHOLDER` stubs with working code.
 
-### Environment variables
-Read an auth token from one of these, in this precedence order:
-1. `COPILOT_SDK_TOKEN`
-2. `GITHUB_TOKEN`
+### Authentication (important)
+Do NOT add a `getCopilotToken()` helper and do NOT pass `githubToken` to the client.
 
-If neither is set, throw a clear error like: `Missing COPILOT_SDK_TOKEN (or GITHUB_TOKEN) for Copilot SDK auth`.
+Instead, rely on the local Copilot CLI authentication:
+- `const client = new CopilotClient();`
+
+This should work when the developer is already logged in with the Copilot CLI.
 
 ### Copilot SDK API (must match installed SDK)
-Use the `@github/copilot-sdk` API shape (replace MODEL_NAME with Haiku 4.5 or Grok Code Fast 1):
-- `const client = new CopilotClient({ githubToken: token })`
+Use the `@github/copilot-sdk` API shape:
+- `const client = new CopilotClient()`
 - `await client.start()`
-- `const session = await client.createSession({ model: "MODEL_NAME" })`
+- `const session = await client.createSession({ model: "Grok Code Fast 1" })`
 - Subscribe to assistant output (either `session.on("assistant.message", ...)` or `session.on((event) => ...)`)
 - `await session.sendAndWait({ prompt })`
 - `await session.destroy()`
