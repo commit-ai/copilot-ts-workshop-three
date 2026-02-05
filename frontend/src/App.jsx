@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+const ENABLE_BATTLE_NARRATION = false; // Set to true to enable battle narration feature
+
 function App() {
   const [superheroes, setSuperheroes] = useState([]);
   const [selectedHeroes, setSelectedHeroes] = useState([]);
   const [currentView, setCurrentView] = useState('table'); // 'table' or 'comparison'
+  const [narration, setNarration] = useState(null);
+  const [narrationLoading, setNarrationLoading] = useState(false);
+  const [narrationError, setNarrationError] = useState(null);
+  const [narrationKey, setNarrationKey] = useState(0);
 
   useEffect(() => {
     fetch('/api/superheroes')
@@ -35,6 +41,40 @@ function App() {
   const handleCompare = () => {
     if (selectedHeroes.length === 2) {
       setCurrentView('comparison');
+      setNarration(null);
+      setNarrationError(null);
+    }
+  };
+
+  const handleGetNarration = async () => {
+    if (selectedHeroes.length !== 2) return;
+    
+    setNarrationLoading(true);
+    setNarrationError(null);
+    
+    try {
+      const response = await fetch('/api/battle-narration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          hero1: selectedHeroes[0],
+          hero2: selectedHeroes[1],
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch narration');
+      }
+      
+      const data = await response.json();
+      setNarration(data.narration);
+    } catch (error) {
+      console.error('Error fetching narration:', error);
+      setNarrationError('Failed to generate battle narration. Please try again.');
+    } finally {
+      setNarrationLoading(false);
     }
   };
 
@@ -131,6 +171,54 @@ function App() {
             </div>
           )}
         </div>
+
+        {ENABLE_BATTLE_NARRATION && (
+          <div className="battle-narration-section">
+            <h2>Battle Narration</h2>
+            {!narration && !narrationLoading && !narrationError && (
+              <button 
+                className="narration-button" 
+                onClick={handleGetNarration}
+              >
+                Generate Epic Battle Story
+              </button>
+            )}
+            {narrationLoading && (
+              <div className="narration-loading">
+                <p>Generating epic battle narration...</p>
+              </div>
+            )}
+            {narrationError && (
+              <div className="narration-error">
+                <p>{narrationError}</p>
+                <button 
+                  className="narration-button" 
+                  onClick={handleGetNarration}
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
+            {narration && (
+              <div className="narration-content">
+                <div className="narration-wrapper">
+                  <p 
+                    key={narrationKey}
+                    onAnimationEnd={() => setNarrationKey(prev => prev + 1)}
+                  >
+                    {narration}
+                  </p>
+                </div>
+                <button 
+                  className="narration-button" 
+                  onClick={handleGetNarration}
+                >
+                  Re-generate Battle
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   };

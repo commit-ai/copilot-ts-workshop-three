@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { generateBattleNarration } from './utils/battleNarration.js';
 
 /**
 This is a superheroes API server that supports 3 GET endpoints
@@ -17,6 +18,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.TEST_PORT || process.env.PORT || 3000;
+
+// Parse JSON request bodies
+app.use(express.json());
 
 // Serve static files (images and other assets)
 app.use(express.static(path.join(__dirname, '../public')));
@@ -121,6 +125,32 @@ app.get('/api/superheroes/:id/powerstats', async (req, res) => {
   } catch (err) {
     console.error('Error loading superheroes data:', err);
     res.status(500).send('Internal Server Error');
+  }
+});
+
+/**
+ * POST /api/battle-narration
+ * Generates a cinematic battle narration between two superheroes.
+ *
+ * Body: { hero1: object, hero2: object } - Two superhero objects with id, name, image, powerstats
+ * Response: 200 OK - { narration: string } - Epic battle narration
+ *           400 Bad Request - If heroes are invalid or missing
+ *           500 Internal Server Error - If narration generation fails
+ */
+app.post('/api/battle-narration', async (req, res) => {
+  try {
+    const { hero1, hero2 } = req.body;
+    
+    if (!hero1 || !hero2 || !hero1.id || !hero2.id) {
+      res.status(400).json({ error: 'Both heroes must be provided with valid data' });
+      return;
+    }
+
+    const result = await generateBattleNarration(hero1, hero2);
+    res.json({ narration: result.narration });
+  } catch (err) {
+    console.error('Error generating battle narration:', err);
+    res.status(500).json({ error: 'Failed to generate battle narration' });
   }
 });
 
