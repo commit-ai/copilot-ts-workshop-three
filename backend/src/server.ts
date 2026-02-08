@@ -147,7 +147,7 @@ app.post('/api/battle-narration', async (req, res) => {
     }
 
     const result = await generateBattleNarration(hero1, hero2);
-    res.json({ narration: result.narration });
+    res.json({ narration: result });
   } catch (err) {
     console.error('Error generating battle narration:', err);
     res.status(500).json({ error: 'Failed to generate battle narration' });

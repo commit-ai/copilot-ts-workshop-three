@@ -34,31 +34,9 @@ function buildPrompt(hero1: Hero, hero2: Hero): string {
 export async function generateBattleNarration(
   hero1: Hero,
   hero2: Hero
-): Promise<BattleNarrationResponse> {
+): Promise<string> {
   const client = null as any; // BATTLE_PLACEHOLDER
   const prompt = buildPrompt(hero1, hero2);
-
-  try {
-    const session = null as any; // BATTLE_PLACEHOLDER
-
-    let narration = '';
-
-    // Collect assistant messages as they arrive.
-    session.on((event: any) => {
-      if (event?.type === 'assistant.message' && event.data && typeof event.data.content === 'string') {
-        narration += event.data.content;
-      }
-    });
-
-    // Send prompt and wait for the session to become idle.
-    await session.sendAndWait({ prompt });
-
-    // Clean up session resources.
-    await session.destroy();
-
-    return { narration };
-  } catch (error) {
-    console.error('Error calling client:', error);
-    throw error;
-  }
+  // BATTLE_PLACEHOLDER
+  return ''; // BATTLE_PLACEHOLDER
 }
