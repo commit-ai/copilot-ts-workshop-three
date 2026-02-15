@@ -19,6 +19,7 @@ Do not create new files.
 - Frontend calls `POST /api/battle-narration` with `{ hero1, hero2 }` and displays `{ narration }`.
 - Backend validates both heroes exist and have `id`, `name`, `image`, and `powerstats` with numeric fields.
 - Narration is 80–120 words, includes both hero names, and declares a winner or a stalemate.
+- Do NOT include the image URLs in the narattion - text only!
 
 ## 1) Frontend: enable the feature
 File: `frontend/src/App.jsx`
@@ -39,6 +40,7 @@ Use the existing `buildPrompt(hero1, hero2)` helper as the basis, but strengthen
 - Use short paragraphs (up to 3 sentences) and insert a blank line between each paragraph
 - must mention both hero names
 - must end with a clear winner/tie sentence
+- must NOT include image URLs in the narattion - text only!
 
 ### Return shape
 Return `{ narration }` (string). Trim leading/trailing whitespace.
