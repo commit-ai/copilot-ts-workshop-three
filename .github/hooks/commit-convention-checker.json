@@ -1,0 +1,11 @@
+{
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "bash.*git commit",
+				"bash": "$PWD/hooks/check-commit.sh",
+        		"timeoutSec": 10
+			}
+		]
+	}
+}

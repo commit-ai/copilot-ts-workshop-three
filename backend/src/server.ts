@@ -62,6 +62,32 @@ function loadSuperheroes(): Promise<any> {
 }
 
 /**
+ * Compute a fuzzy match score between a query and a target string.
+ * Returns a score >= 0 (higher = better match), or -1 if no match.
+ * Plain-text only — the query is never interpreted as a regex.
+ */
+function fuzzyScore(query: string, target: string): number {
+  const q = query.toLowerCase();
+  const t = target.toLowerCase();
+
+  // Exact match (best)
+  if (t === q) return 3;
+  // Starts-with
+  if (t.startsWith(q)) return 2;
+  // Contains substring
+  if (t.includes(q)) return 1;
+
+  // Character-sequence match (each query char appears in order)
+  let qi = 0;
+  for (let ti = 0; ti < t.length && qi < q.length; ti++) {
+    if (t[ti] === q[qi]) qi++;
+  }
+  if (qi === q.length) return 0.5;
+
+  return -1; // no match
+}
+
+/**
  * GET /api/superheroes
  * Returns a list of all superheroes.
  *
@@ -74,6 +100,46 @@ app.get('/api/superheroes', async (req, res) => {
     res.json(superheroes);
   } catch (err) {
     console.error('Error loading superheroes data:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/**
+ * GET /api/superheroes/search?q=<query>
+ * Searches superheroes by name using fuzzy matching.
+ *
+ * Query params: q (string) - The search query (plain text, not regex)
+ * Response: 200 OK - Array of matching superhero objects sorted by match quality
+ *           500 Internal Server Error - If data cannot be read
+ */
+app.get('/api/superheroes/search', async (req, res) => {
+  try {
+    const superheroes = await loadSuperheroes();
+    const rawQuery = (req.query.q as string) ?? '';
+    const query = rawQuery.trim();
+
+    // Empty / missing query → return the full list (same as /api/superheroes)
+    if (!query) {
+      res.json(superheroes);
+      return;
+    }
+
+    // Score every hero, keep only matches (score >= 0)
+    const scored = superheroes
+      .map((hero: any) => ({ hero, score: fuzzyScore(query, hero.name) }))
+      .filter((item: any) => item.score >= 0);
+
+    // Sort by score desc, then name asc, then id asc for stability
+    scored.sort((a: any, b: any) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const nameCompare = a.hero.name.localeCompare(b.hero.name);
+      if (nameCompare !== 0) return nameCompare;
+      return a.hero.id - b.hero.id;
+    });
+
+    res.json(scored.map((item: any) => item.hero));
+  } catch (err) {
+    console.error('Error searching superheroes:', err);
     res.status(500).send('Internal Server Error');
   }
 });

@@ -75,3 +75,51 @@ describe('GET /api/superheroes/:id/powerstats', () => {
   });
 });
 
+describe('GET /api/superheroes/search', () => {
+  it('should return matching heroes for a valid query', async () => {
+    const response = await request(app).get('/api/superheroes/search?q=Adam');
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+    // Every result should contain "Adam" (case-insensitive)
+    response.body.forEach((hero: any) => {
+      expect(hero.name.toLowerCase()).toContain('adam');
+    });
+  });
+
+  it('should return results ordered by match quality (best first)', async () => {
+    // "A-Bomb" is an exact-starts-with match for "a-bomb"
+    const response = await request(app).get('/api/superheroes/search?q=a-bomb');
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body[0].name).toBe('A-Bomb');
+  });
+
+  it('should return an empty array when no heroes match', async () => {
+    const response = await request(app).get('/api/superheroes/search?q=zzzznotahero');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it('should return the full list when query is empty', async () => {
+    const response = await request(app).get('/api/superheroes/search?q=');
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(17);
+  });
+
+  it('should return the full list when q param is missing', async () => {
+    const response = await request(app).get('/api/superheroes/search');
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(17);
+  });
+
+  it('should handle special characters without throwing', async () => {
+    const response = await request(app).get('/api/superheroes/search?q=*?([]');
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    // No crash — just returns an array (possibly empty)
+  });
+});
+
