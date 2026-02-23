@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 const ENABLE_BATTLE_NARRATION = false; // Set to true to enable battle narration feature
@@ -11,37 +11,13 @@ function App() {
   const [narrationLoading, setNarrationLoading] = useState(false);
   const [narrationError, setNarrationError] = useState(null);
   const [narrationKey, setNarrationKey] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchLoading, setSearchLoading] = useState(false);
-  const debounceRef = useRef(null);
 
-  // Fetch heroes: full list on mount, or search results when query changes
-  const fetchHeroes = useCallback((query) => {
-    setSearchLoading(true);
-    const url = query
-      ? `/api/superheroes/search?q=${encodeURIComponent(query)}`
-      : '/api/superheroes';
-    fetch(url)
+  useEffect(() => {
+    fetch('/api/superheroes')
       .then((response) => response.json())
       .then((data) => setSuperheroes(data))
-      .catch((error) => console.error('Error fetching superheroes:', error))
-      .finally(() => setSearchLoading(false));
+      .catch((error) => console.error('Error fetching superheroes:', error));
   }, []);
-
-  // Initial load (full list)
-  useEffect(() => {
-    fetchHeroes('');
-  }, [fetchHeroes]);
-
-  // Debounced search handler
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      fetchHeroes(value.trim());
-    }, 300);
-  };
 
   const handleHeroSelection = (hero) => {
     setSelectedHeroes(prev => {
@@ -250,24 +226,8 @@ function App() {
   const renderTable = () => (
     <div className="table-view">
       <h1>Superheroes</h1>
-
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search superheroes..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-        {searchLoading && <span className="search-spinner">Searching…</span>}
-      </div>
-
-      {superheroes.length === 0 && searchQuery.trim() !== '' && !searchLoading ? (
-        <p className="no-results">No superheroes matching the search query</p>
-      ) : (
-        <>
-          <div className="selection-info">
-            <p>Select 2 superheroes to compare ({selectedHeroes.length}/2 selected)</p>
+      <div className="selection-info">
+        <p>Select 2 superheroes to compare ({selectedHeroes.length}/2 selected)</p>
         {selectedHeroes.length > 0 && (
           <div className="selected-heroes">
             Selected: {selectedHeroes.map(h => h.name).join(', ')}
@@ -323,8 +283,6 @@ function App() {
           ))}
         </tbody>
       </table>
-        </>
-      )}
     </div>
   );
 
