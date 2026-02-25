@@ -145,3 +145,13 @@ my-awesome-skill/
 ## References
 
 - Agent Skills official spec: <https://agentskills.io/specification>
+
+!!SUPER IMPROTANT NOTE ON FORMAT!!
+Verify and double-check yourself to make sure the SKILL.md file starts with the three dashes '---' and then 'name' and 'description' fields (and after those optional fields where relevant), and nothing else - like below:
+```
+---
+name: ...
+description:...
+...
+---
+```
